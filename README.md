@@ -133,7 +133,7 @@ Info Got waybill: https://drive.google.com/file/d/abc12345678xyz.../view?usp=dri
 
 You are free to fork, clone, or copy-paste this repo as you'd like 🙂 Some easy ways to do this are with [clasp](https://github.com/google/clasp), or good old fashioned copy-pasta.
 
-Sign up for a Shiplogic sandbox account, and set your API key s a property of your script with the key name `sandbocApiKey`.
+Sign up for a Shiplogic sandbox account, and set your API key s a property of your script with the key name `sandboxApiKey`.
 
 Next, set up yur config.
 
