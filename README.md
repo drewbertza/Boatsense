@@ -20,7 +20,7 @@
   * Capturing webhook updates
   * A simple web app UI
 
-* This doc uses the namespace `Boatsense`, which you totally don't have to use. Google recommends *not* using libraries in your projects, and since libraries add significant latency to HTMLService elements, you probably should copy this code into your own project.  You can keep the file structure for the `.gs` files as it appears here, or just paste everything into one big file (although the JSDoc might make this painful to read). The HTML files must remain separate as they are in this project, unless you want to rewrite the UI components (I wouldn't blame you. They are terrible. Sorry).
+* Google recommends *not* using libraries in your projects, and since libraries add significant latency to HTMLService elements, you probably should copy this code into your own project.  You can keep the file structure for the `.gs` files as it appears here, or just paste everything into one big file (although the JSDoc might make this painful to read). The HTML files must remain separate as they are in this project, unless you want to rewrite the UI components (I wouldn't blame you. They are terrible. Sorry).
 
 * If you want to use this project outside of Google Workspace, it should work without too much adjustment. In particular, you'll need to use regular fetch instaead of UrlFetchApp for the API calls. You'll need to roll your own UI as well, but the form fields are pretty straight-forward.
 
