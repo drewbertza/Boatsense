@@ -1,0 +1,209 @@
+<script
+  src="https://code.jquery.com/jquery-3.5.1.min.js"
+  integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+  crossorigin="anonymous"></script>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script>
+
+  $(document).ready(function() {  
+    $('#shipment-details').submit(onShipFormSubmit);
+    M.AutoInit();
+    google.script.run
+    .withSuccessHandler(function(data){
+      initItems(data)
+    }).getProducts();
+  });
+
+
+// MY STUFF
+
+  var direction = "outgoing";
+  var itemcount = 0;
+  var packagelist;
+  var customcount = 0;
+
+
+  function makeItem (list) {
+    var allItems = "";
+    for (let item = 0; item < list.length; item++) {
+      allItems += `<option value="${list[item]}">${list[item]}</option>`;  
+    } 
+
+    let itemSelect = `<div class="card-panel grey lighten-5 z-depth-1" id="item${itemcount}"><div class="row"><div class="col s11"><p class="flow-text"><i class="material-icons prefix">card_giftcard</i>Package ${customcount + itemcount + 1}</p></div><div class="col s1"><a class="btn-floating btn-small waves-effect waves-light" onclick="deleteItem('${itemcount}')"><i class="material-icons">delete</i></a></div></div>`; 
+
+    itemSelect = itemSelect + `<div class="row"><div class="input-field col s6"><select id="package${itemcount}" name="package${itemcount}">${allItems}</select><label for="package${itemcount}">Add an item</label></div>`;
+
+    itemSelect = itemSelect + `<div class="input-field col s6"><input id="serial${itemcount}" name="serial${itemcount}" type="text"><label for="serial${itemcount}">Serial number</label></div>`;
+
+    itemSelect = itemSelect + '</div></div>';
+
+    return itemSelect;
+  }
+
+  function makeCustomItem() {
+
+    let customItem = `<div class="card-panel grey lighten-5 z-depth-1" id="customItem${customcount}"><div class="row"><div class="col s11"><p class="flow-text"><i class="material-icons prefix">card_giftcard</i>Package ${customcount + itemcount + 1}</p></div><div class="col s1"><a class="btn-floating btn-small waves-effect waves-light" onclick="deleteCustomItem('${customcount}')"><i class="material-icons ">delete</i></a></div></div><div class="row">`; 
+
+    customItem = customItem + `<div class="input-field col s12"><input id="description${customcount}" name="description${customcount}" type="text"><label for="description${customcount}">Description</label></div>`;
+
+    customItem = customItem + `<div class="input-field col s4"><input id="value${customcount}" name="value${customcount}" type="number" step="1"><label for="value${customcount}">Value</label></div><div class="row s12">`;
+
+    customItem = customItem + `<div class="input-field col s2"><input id="width${customcount}" name="width${customcount}" type="number" step="1"><label for="width${customcount}">Width (cm)</label></div>`;
+
+    customItem = customItem + `<div class="input-field col s2"><input id="length${customcount}" name="length${customcount}" type="number" step="1"><label for="length${customcount}">Length (cm)</label></div>`;
+
+    customItem = customItem + `<div class="input-field col s2"><input id="height${customcount}" name="height${customcount}" type="number" step="1"><label for="height${customcount}">Height (cm)</label></div>`;
+
+    customItem = customItem + `<div class="input-field col s2"><input id="weight${customcount}" name="weight${customcount}" type="number" step="1"><label for="width${customcount}">Weight (kg)</label></div><div class="col s2"></div>`;
+
+    customItem = customItem + '</div></div>';
+
+    return customItem;
+  }
+
+
+  function addItem () {
+    let list = packagelist;
+    $('#packages').append(makeItem(list));
+    //$(`[id=item${itemcount}]`)
+    M.AutoInit();
+    itemcount++;
+  }
+
+  function addCustomItem () {
+    $('#packages').append(makeCustomItem());
+    //$(`#customItem${customcount}`)
+    customcount++;
+  };
+
+  function deleteItem(itemdex) {
+    $(`#item${itemdex}`).remove();
+    itemcount--
+  }
+
+  function deleteCustomItem(itemdex) {
+    $(`#customItem${itemdex}`).remove();
+    customcount--
+  }
+
+  function initItems (list) {
+    packagelist = list;
+  }
+  
+
+
+function showBit(switchName, whatDo) {
+  var consignmentDirection = "";
+  if (direction === "outgoing") {
+    consignmentDirection = "collection";
+  } else {
+    consignmentDirection = "delivery";
+  }
+  var checkSwitch = $(`#${switchName}`).is(':checked');
+  var bit;
+  if ( switchName === 'defaultAddress'){
+    bit = `${consignmentDirection}Address`;
+  } else {
+    if ( switchName === 'defaultContact'){
+      bit = `${consignmentDirection}Contact`;
+    } else {
+      if ( switchName === 'collectOfficeHours'){
+        bit = 'collectionConstraints';
+      } else {
+        if ( switchName === 'deliverOfficeHours'){
+          bit = 'deliveryConstraints';
+        }
+      }
+    }
+  }
+  if (whatDo === undefined) {
+    if (checkSwitch) {
+      whatDo = "hide";
+    } else {
+      whatDo = "show";
+    }
+  }
+  if (whatDo === "hide") {
+      $(`#${bit}`).hide('slow');
+  }
+  if (whatDo === "show") {
+      $(`#${bit}`).show('slow');
+  }
+}
+
+
+function swapDirection() {
+  showBit('defaultAddress', "show");
+  showBit('defaultContact',"show");
+  if (direction === "outgoing") {
+    direction = "incoming";
+    $('#outgoingCard').hide();
+    $('#incomingCard').show();
+  } else {
+    direction = "outgoing";
+    $('#incomingCard').hide();
+    $('#outgoingCard').show();
+  }
+  showBit('defaultAddress', "hide");
+  showBit('defaultContact',"hide");
+}
+
+
+function menuClick(msg) {
+  if (msg === "add") {
+    $("#add").show();
+  }
+}
+
+
+
+
+
+// ! MY STUFF
+
+
+  function onShipFormSubmit(event) {
+  
+    event.preventDefault()
+ 
+    var status = $('#submit-status')
+    var button = $('#submit-button')
+    var form = $('#shipment-details').get()[0]
+  
+    status.hide()
+    button.text('Submitting...')
+    button.addClass('disabled')
+
+
+    google.script.run
+      .withSuccessHandler(function() {
+        resetForm('Form submitted OK!')
+      })
+      .withFailureHandler(function(error) {
+        resetForm(error, true)
+      })
+      .onFormSubmit(form);
+      
+    // Private Functions
+    // -----------------
+
+    function resetForm(message, isError) {
+    
+      if (isError) {
+        status.addClass('error')
+      } else {
+        form.reset()
+        status.removeClass('error')      
+      }
+      
+      status.text(message)
+      status.show()
+      
+      button.text('Submit')
+      button.removeClass('disabled')
+    }
+  }
+
+</script>
