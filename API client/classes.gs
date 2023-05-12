@@ -128,26 +128,6 @@ class contactPerson {
 }
 
 
-/**
- * @function toApi
- * @memberof contactPerson
- * @inner
- * Convert this person from API format to internal format
- * @returns {contactperson}
- */
-contactPerson.prototype.toApi = function () {
-  let apiPerson = {
-    name: this.name,
-  };
-  if (this.mobileNumber !== undefined) {
-    apiPerson.mobile_number = this.mobileNumber;
-  }
-  if (this.email !== undefined) {
-    apiPerson.email = this.email;
-  }
-  return apiPerson;
-}
-
 
 /**
  * Defines a logical way to organise the required properties of the API request object.
@@ -419,43 +399,6 @@ class ratesQuery {
 }
 
 
-
-
-/**
- * @class shipment
- * @property {shipmentQuery} payload
- */
-class shipment {
-  /**
-   * @param {collection} collection
-   * @param {boatsenseEndpoint} delivery
-   */
-  constructor(collection, delivery) {
-    this.payload =
-    {
-      collection_address: collection.address.toApi(),
-      collection_contact: collection.contact.toApi(),
-      delivery_address: delivery.address.toApi(),
-      delivery_contact: delivery.contact.toApi(),
-      parcels: collection.parcels.parcels,
-      collection_min_date: collection.constraints.minDate,
-      collection_after: collection.constraints.openingTime,
-      collection_before: collection.constraints.closingTime,
-      delivery_min_date: delivery.constraints.minDate,
-      delivery_after: delivery.constraints.openingTime,
-      delivery_before: delivery.constraints.closingTime,
-      service_level_code: collection.rates.serviceLevelCode,
-      mute_notifications: false,
-      customer_reference: collection.reference,
-      declared_value: collection.parcels.meta.value,
-      opt_in_rates: collection.rates.optInRates,
-      opt_in_time_based_rates: collection.rates.optInTimeBasedRates,
-      custom_tracking_reference: "",
-      special_instructions_collection: collection.constraints.specialInstructions,
-      special_instructions_delivery: delivery.constraints.specialInstructions
-    };
-  }
-}
 
 
 /**
