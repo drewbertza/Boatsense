@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <base target="_top">
+  <?!= include('css') ?>
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <div class="nav-wrapper teal" id="nav-bar">
+        <a href="#" data-target="side-nav"
+          class="sidenav-trigger show-on-large"><i class="material-icons left">menu</i></a>
+        <p class="flow-text">Book a shipment </p>
+        <ul class="right hide">
+          <li class="active"><a href="#">Book a shipment</a></li>
+          <li><a href="#">View all shipmnents</a></li>
+          <li><a href="#">Track a shipment</a></li>
+          <li><a href="#">View spreadsheet</a></li>
+        </ul>
+      </div>
+    </nav>
+    <ul class="sidenav teal lighten-4" id="side-nav">
+      <li class="active"><a href="#">Book a shipment</a></li>
+      <li><a href="#">View all shipmnents</a></li>
+      <li><a href="#">Track a shipment</a></li>
+      <li><a href="#">View spreadsheet</a></li>
+    </ul>
+  </header>
+
+
+  <main class="teal lighten-5">
+    <div class="container">
+
+      <div class="row" id="spacer-row"></div>
+      <div id="add">
+
+        <!-- FORM  -->
+
+        <form id="shipment-details">
+
+          <!-- INFO CARD -->
+
+          <div id="settings">
+
+            <div class="row">
+              <div class="col s12 m6 l6">
+                <div class="card-panel grey lighten-5 z-depth-1" id="meta" name="meta">
+                  <div class="section">
+                    <p class="flow-text">
+                      <i class="material-icons prefix">assignment</i> Order info
+                    </p>
+                  </div>
+                  <div class="section">
+                    <div class="input-field">
+                      <input id="cid" name="cid" type="text" input-mode="numeric" class="validate" required>
+                      <label for="cid">CID *</label>
+                    </div>
+                    <div class="input-field">
+                      <input id="ticket" name="ticket" type="text" input-mode="numeric" class="validate" required>
+                      <label for="ticket">Order ticket number *</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- OPTIONS CARD -->
+              <div class="col s12 m6 l6">
+
+                <!-- normal card -->
+                <div class="card-panel grey lighten-5 z-depth-1" id="outgoingOptions" name="options">
+
+                  <div class="section">
+                    <p class="flow-text" id="outgoingCard">
+                      <i class="material-icons prefix">flight_takeoff</i>
+                      Outgoing shipment
+                      <a class="waves-effect waves-light btn right" onclick="swapDirection()">
+                        <i class="material-icons">swap_horiz</i>
+                      </a>
+                    </p>
+                    <p class="flow-text" id="incomingCard" hidden>
+                      <i class="material-icons prefix">flight_land</i>
+                      Incoming shipment
+                      <a class="waves-effect waves-light btn right" onclick="swapDirection()">
+                        <i class="material-icons">swap_horiz</i>
+                      </a>
+                    </p>
+
+                    <div class="row">
+                      <div class="col s6">
+                        <div class="switch" onclick="showBit('defaultContact')">
+                          <label>
+                      <input type="checkbox" name="defaultContact" id="defaultContact" value="defaultContact" checked>
+                        <span class="lever"></span>
+                        Default contact
+                    </label>
+                        </div>
+                      </div>
+
+                      <div class="col s6">
+                        <div class="switch" onclick="showBit('defaultAddress')">
+                          <label>
+                          <input type="checkbox" name="defaultAddress" id="defaultAddress" value="defaultAddress" checked>
+                          <span class="lever"></span>
+                          Default address
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="section">
+
+                    <div class="row">
+                      <div class="col s6">
+                        <div class="switch" onclick="showBit('collectOfficeHours')">
+                          <label>
+                      <input type="checkbox" name="collectiomOfficeHours" id="collectOfficeHours" value="collectOfficeHours" checked>
+                      <span class="lever"></span>
+                      Collect during office hours
+                    </label>
+                        </div>
+                      </div>
+
+                      <div class="col s6">
+                        <div class="switch" onclick="showBit('deliverOfficeHours')">
+                          <label>
+                      <input type="checkbox" name="deliverOfficeHours" id="deliverOfficeHours" value="deliverOfficeHours" checked>
+                      <span class="lever"></span>
+                      Deliver during office hours
+                    </label>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="section center-align">
+                  <div class="row">
+
+                    <div class="col s12 m6 l6">
+                      <a class="waves-effect waves-light btn btn-block" id="itemButton" onclick="addItem()">
+                        <i class="material-icons left">add_shopping_cart</i>
+                        Standard package
+                      </a>
+                    </div>
+
+                    <div class="col s12 m6 l6">
+                      <a class="waves-effect waves-light btn btn-block" id="customItemButton" onclick="addCustomItem()">
+                        <i class="material-icons left">add_shopping_cart</i>
+                        Custom package
+                      </a>
+                    </div>
+
+                  </div>
+                </div>
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+
+
+          <!-- PACKAGES -->
+
+          <div id="packages">
+            <!-- addedd programmatically -->
+          </div>
+
+
+
+          <!-- COLLECTION -->
+
+          <div id="collectionAddress" hidden>
+            <div class="card-panel grey lighten-5 z-depth-1">
+              <div class="row">
+                <div class="col s12">
+                  <p class="flow-text">
+                    <i class="material-icons prefix">add_location</i>
+                    Collection address
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s8 l10">
+                  <select id="addressBookCollection" name="addressBookCollection">
+                  <? var addresses = getAddressBook() ?>
+                  <? for (let z = 0; z < addresses.length; z++) { ?>
+                  <?!= `<option value="${addresses[z]}">${addresses[z]}</option>` ?>
+                  <? } ?>
+                </select>
+                  <label for="addressBookCollection">
+                  Address book
+                </label>
+                </div>
+                <div class="col s4 l2">
+                  <a class="waves-effect waves-light btn" id="selectCollectionAddress">
+                    <i class="material-icons left" onclick="selectCollectionAddress()">check</i>
+                    Select
+                  </a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="colcompanyName" name="colcompanyName" type="text" inputmode="text" class="validate">
+                  <label for="colcompanyName">
+                  Company name (leave blank for residential address)
+                </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="colstreetAddress" name="colstreetAddress" type="text"
+                    class="validate" >
+                  <label for="colstreetAddress">
+                    Street address *
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="colsuburb" name="colsuburb" type="text" class="validate" inputmode="text">
+                  <label for="colsuburb">
+                    Suburb *
+                  </label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="colcity" name="colcity" type="text" class="validate" inputmode="text">
+                  <label for="colcity">
+                    City/Town *
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="colcode" name="colcode" type="text" class="validate" inputmode="numeric">
+                  <label for="colcode">
+                    Code *
+                  </label>
+                </div>
+                <div class="input-field col s6">
+                  <select id="colprovince" name="colprovince">
+                  <option value="Eastern Cape">Eastern Cape</option>
+                  <option value="Gauteng">Gauteng</option>
+                  <option value="Western Cape">Western Cape</option>
+                  <option value="Northern Cape">Northern Cape</option>
+                  <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                  <option value="Mpumalanga">Mpumalanga</option>
+                  <option value="Free State">Free-state</option>
+                  <option value="North West">North West</option>
+                  <option value="Limpopo">Limpopo</option>
+                  </select>
+                  <label for="colprovince">
+                  Province
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div id="collectionContact" hidden>
+            <div class="card-panel grey lighten-5 z-depth-1">
+              <div class="row">
+                <div class="col s12">
+                  <p class="flow-text">
+                    <i class="material-icons prefix">person_pin</i>
+                    Collection contact
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="collcontact" name="collcontact" type="text" class="validate">
+                  <label for="collectionContact">
+                    Collection contact name *
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="colmobile" name="colmobile" type="tel" class="validate" inputmode="numeric" >
+                  <label for="colmobile">
+                    Mobile number *
+                  </label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="colemail" name="colemail" type="email" class="validate" inputmode="text" >
+                  <label for="colemail">
+                    Email address *
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div id="collectionConstraints" hidden>
+            <div class="card-panel grey lighten-5 z-depth-1">
+              <div class="row">
+                <div class="col s12">
+                  <p class="flow-text">
+                    <i class="material-icons prefix">event_available</i>
+                    Collection time
+                  </p>
+                </div>
+              </div>
+              <div class="rowrow">
+                <div class="input-field col s4">
+                  <input type="text" class="datepicker" id="collectionDate">
+                  <label for ="collectionDate">
+                  Earliest collection date
+                </label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="text" class="timepicker" id="collectionMinTime">
+                  <label for ="deliveryMinTime">
+                  Earlierst collection time
+                </label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="text" class="timepicker" id="collectionMaxTime">
+                  <label for ="collectionMaxTime">
+                  Latest collection time
+                </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- DELIVERY -->
+
+          <div id="deliveryAddress">
+            <div class="card-panel grey lighten-5 z-depth-1">
+              <div class="row">
+                <div class="col s12">
+                  <p class="flow-text">
+                    <i class="material-icons prefix">add_location</i>
+                    Delivery address
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s8 l10">
+                  <select id="addressBook" name="addressBook">
+                  <? for (let w = 0; w < addresses.length; w++) { ?>
+                  <?!= `<option value="${addresses[w]}">${addresses[w]}</option>` ?>
+                  <? } ?>
+                </select>
+                  <label for="addressBook">
+                  Address book
+                </label>
+                </div>
+                <div class="col s4 l2">
+                  <a class="waves-effect waves-light btn" id="selectAddress">
+                    <i class="material-icons left" onclick="selectAddress()">check</i>
+                    Select
+                  </a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="companyName" name="companyName" type="text" inputmode="text" class="validate">
+                  <label for="companyName">
+                  Company name (leave blank for residential address)
+                </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="streetAddress" name="streetAddress" type="text"
+                    class="validate" required>
+                  <label for="streetAddress">
+                    Street address *
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="suburb" name="suburb" type="text" class="validate" inputmode="text" required>
+                  <label for="suburb">
+                    Suburb *
+                  </label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="city" name="city" type="text" class="validate" inputmode="text" required>
+                  <label for="city">
+                    City/Town *
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="code" name="code" type="text" class="validate" inputmode="numeric" required>
+                  <label for="code">
+                    Code *
+                  </label>
+                </div>
+                <div class="input-field col s6">
+                  <select id="province" name="province">
+                  <option value="Eastern Cape">Eastern Cape</option>
+                  <option value="Gauteng">Gauteng</option>
+                  <option value="Western Cape">Western Cape</option>
+                  <option value="Northern Cape">Northern Cape</option>
+                  <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                  <option value="Mpumalanga">Mpumalanga</option>
+                  <option value="Free State">Free-state</option>
+                  <option value="North West">North West</option>
+                  <option value="Limpopo">Limpopo</option>
+                </select>
+                  <label for="province">
+                  Province
+                </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div id="deliveryContact">
+            <div class="card-panel grey lighten-5 z-depth-1">
+              <div class="row">
+                <div class="col s12">
+                  <p class="flow-text">
+                    <i class="material-icons prefix">person_pin</i>
+                    Delivery contact
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="recipient" name="recipient" type="text"
+                    class="validate" required>
+                  <label for="recipient">
+                    Recipient name *
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s6">
+                  <input id="mobile" name="mobile" type="tel" class="validate" inputmode="numeric" required>
+                  <label for="mobile">
+                    Mobile number *
+                  </label>
+                </div>
+                <div class="input-field col s6">
+                  <input id="email" name="email" type="email" class="validate" inputmode="text" required>
+                  <label for="email">
+                    Email address *
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div id="deliveryConstraints" hidden>
+            <div class="card-panel grey lighten-5 z-depth-1">
+              <div class="row">
+                <div class="col s12">
+                  <p class="flow-text">
+                    <i class="material-icons prefix">event_available</i>
+                    Delivery time
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s4">
+                  <input type="text" class="datepicker" id="deliveryDate">
+                  <label for ="deliveryDate">
+                  Earliest delivery date
+                </label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="text" class="timepicker" id="deliveryMinTime">
+                  <label for ="deliveryMinTime">
+                  Earlierst delivery time
+                </label>
+                </div>
+                <div class="input-field col s4">
+                  <input type="text" class="timepicker" id="deliveryMaxTime">
+                  <label for ="deliveryMaxTime">
+                  Latest delivery time
+                </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+          <div id="submitButton">
+            <div class="row">
+              <div class="col s12">
+                <button id="submit-button" name="submit-button" type="submit" class="waves-effect waves-light btn blue darken-2">
+                  <i class="material-icons right">send</i>
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+
+        </form>
+
+
+
+        <div id="submit-status" hidden>
+          <div class="row">
+            <div class="col s12">
+              <div class="flow-text status"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12" id="submission-feedback">
+
+            </div>
+          </div>
+          <div class="row s12">
+            <div class="col s6">
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </main>
+
+  <?!= include('js') ?>
+
+</body>
+
+</html>
