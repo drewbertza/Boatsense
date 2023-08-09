@@ -1,0 +1,25 @@
+  <div class="input-field col s12">
+    <i class="material-icons prefix">event</i>
+    <?!= `<input id="${data.endpoint}.constraints.date" name="date" type="text" class="datepicker validate">` ?>
+    <?!= `<label for="${data.endpoint}.constraints.date">` ?>
+    Earliest available date
+    </label>
+  </div>
+
+
+  <div class="input-field col s12 l6">
+    <i class="material-icons prefix">access_time</i>
+    <?!= `<input id="${data.endpoint}.constraints.openingTime" name="openingTime" type="text" class="timepicker validate">` ?>
+    <?!= `<label for="${data.endpoint}.constraints.openingTime">` ?>
+    Earliest time
+    </label>
+  </div>
+
+
+  <div class="input-field col s12 l6">
+    <i class="material-icons prefix">alarm</i>
+    <?!= `<input id="${data.endpoint}.constraints.maxTime" name="maxTime" type="text" class="timepicker validate">` ?>
+    <?!= `<label for="${data.endpoint}.constraints.maxTime">` ?>
+    Latest time
+    </label>
+  </div>
