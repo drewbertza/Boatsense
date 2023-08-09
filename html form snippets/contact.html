@@ -1,0 +1,26 @@
+        <div class="input-field col s12">
+          <i class="material-icons prefix">person</i>
+          <?!= `<input id="${data.endpoint}.contact.name" name="${data.endpoint}.contact.name" type="text" pattern=".+" class="validate" data-error="Name is required" required>` ?>
+          <?!= `<label for="${data.endpoint}.contact.name">` ?>
+          Name
+          </label>
+        </div>
+
+
+        <div class="input-field col s12 l6">
+          <i class="material-icons prefix">email</i>
+          <?!= `<input id="${data.endpoint}.contact.email" name="${data.endpoint}.contact.email" type="email" class="validate"  inputmode="text" required>` ?>
+          <?!= `<label for="${data.endpoint}.contact.email">` ?>
+          Email address
+          </label>
+        </div>
+
+
+        <div class="input-field col s12 l6">
+          <i class="material-icons prefix">phone</i>
+          <? let pattern = '\\+?(?:27|0)[\\s\\-]?\\d{2}[\\-\\s]?\\d{3}[\\s\\-]?\\d{4}' ?>
+          <?!= `<input id="${data.endpoint}.contact.mobileNumber" name="${data.endpoint}.contact.mobileNumber" type="tel" class="validate"  inputmode="numeric" pattern="${pattern}">` ?>
+          <?!= `<label for="${data.endpoint}.contact.mobileNumber">` ?>
+          Mobile number
+          </label>
+        </div>
